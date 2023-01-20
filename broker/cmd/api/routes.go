@@ -11,7 +11,7 @@ import (
 /*
 Routes creates a mux
 */
-func (app *Config) Routes() http.Handler {
+func (app *Config) routes() http.Handler {
 	mux := chi.NewRouter()
 
 	mux.Use(cors.Handler(cors.Options{
@@ -25,7 +25,7 @@ func (app *Config) Routes() http.Handler {
 
 	mux.Use(middleware.Heartbeat("/ping"))
 
-	mux.Post("/", app.Broker)
+	mux.Post("/", app.broker)
 
 	return mux
 }

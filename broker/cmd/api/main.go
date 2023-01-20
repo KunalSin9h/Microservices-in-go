@@ -16,7 +16,7 @@ func main() {
 
 	server := &http.Server{
 		Addr:    fmt.Sprintf(":%s", PORT),
-		Handler: app.Routes(),
+		Handler: app.routes(),
 	}
 
 	log.Printf("Started Broker Server at port: %s", PORT)
