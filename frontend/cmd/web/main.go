@@ -12,8 +12,8 @@ func main() {
 		render(w, "test.page.gohtml")
 	})
 
-	log.Println("Starting front end service on port 8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Println("Starting front end service on port 5000")
+	log.Fatal(http.ListenAndServe(":5000", nil))
 }
 
 func render(w http.ResponseWriter, t string) {

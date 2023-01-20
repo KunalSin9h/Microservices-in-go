@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "broker"
+		},
+		{
+			"path": "project"
 		}
 	],
 	"settings": {
