@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "frontend"
+		},
+		{
+			"path": "broker"
+		}
+	],
+	"settings": {
+		"editor.fontFamily": "'Cascadia Code', 'monospace', monospace"
+	}
+}
