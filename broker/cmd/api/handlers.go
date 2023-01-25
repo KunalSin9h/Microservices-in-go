@@ -43,7 +43,7 @@ func (app *Config) authenticate(w http.ResponseWriter, load AuthPayload) {
 		return
 	}
 
-	req, err := http.NewRequest("POST", "http://auth/authenticate", bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest("POST", "http://auth:5002/authenticate", bytes.NewBuffer(jsonData))
 	if err != nil {
 		app.errorJson(w, err)
 		return
@@ -82,7 +82,7 @@ func (app *Config) authenticate(w http.ResponseWriter, load AuthPayload) {
 
 	var payload jsonResponse
 	payload.Error = false
-	payload.Message = "Authenticate"
+	payload.Message = "Authenticated"
 	payload.Data = response.Data
 
 	app.writeJson(w, http.StatusAccepted, payload)

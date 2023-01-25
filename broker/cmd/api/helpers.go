@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http"
 )
 
@@ -31,12 +30,12 @@ func (app *Config) readJson(w http.ResponseWriter, r *http.Request, data any) er
 		struct{}{} -> instance of empty struct
 		means nothing
 	*/
-	if err := dec.Decode(&struct{}{}); err != nil {
-		/*
-			After extracting `data` there should nothing left
-		*/
-		return errors.New("body must have only a single JSON value")
-	}
+	// if err := dec.Decode(&struct{}{}); err != nil {
+	// 	/*
+	// 		After extracting `data` there should nothing left
+	// 	*/
+	// 	return errors.New("body must have only a single JSON value")
+	// }
 
 	return nil
 }

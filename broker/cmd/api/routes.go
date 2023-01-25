@@ -25,7 +25,15 @@ func (app *Config) routes() http.Handler {
 
 	mux.Use(middleware.Heartbeat("/ping"))
 
-	mux.Post("/", app.HandleSubmission)
+	mux.Post("/", func(w http.ResponseWriter, r *http.Request) {
+		payload := jsonResponse{
+			Error:   false,
+			Message: "Hello From broker",
+		}
+		app.writeJson(w, http.StatusAccepted, payload)
+	})
+
+	mux.Post("/handle", app.HandleSubmission)
 
 	return mux
 }
