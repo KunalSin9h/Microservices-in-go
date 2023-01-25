@@ -1,5 +1,5 @@
 /project/db-data/postgres/
 .vscode
-./frontend/frontApp
-./broker/brokerApp
-./auth/authApp
+frontend/frontApp
+broker/brokerApp
+auth/authApp
