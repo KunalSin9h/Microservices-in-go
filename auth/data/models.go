@@ -145,7 +145,7 @@ func (u *User) GetOne(id int) (*User, error) {
 // stored in the receiver u
 func (u *User) Update() error {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
-	defer cancel()
+	defer cancel() // To free up context resources
 
 	stmt := `update users set
 		email = $1,

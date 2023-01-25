@@ -7,13 +7,16 @@
 			"path": "broker"
 		},
 		{
-			"path": "project"
+			"path": "auth"
 		},
 		{
-			"path": "auth"
+			"path": "project"
 		}
 	],
 	"settings": {
-		"editor.fontFamily": "'Cascadia Code', 'monospace', monospace"
+		"editor.fontFamily": "'Cascadia Code', 'monospace', monospace",
+		"cSpell.enableFiletypes": [
+			"!dockercompose"
+		]
 	}
 }

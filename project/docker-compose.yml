@@ -10,3 +10,35 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+
+  auth:
+    build:
+      context: ./../auth
+      dockerfile: ./../auth/auth.dockerfile
+    restart: always
+    ports:
+      - "5002:5002"
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      DSN: "postgres://admin:admin@postgres:5432/users"
+      # DSN: "host=postgres port=5432 user=admin password=admin dbname=usres sslmode=disable timezone=UTC connect_timeout=5"
+    depends_on:
+      - postgres
+
+  postgres:
+    image: 'postgres:14.6-alpine3.17'
+    ports:
+      - "5432:5432"
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: users
+    volumes:
+      # Bind MOUNT
+      - ./db-data/postgres/:/var/lib/postgresql/data/
