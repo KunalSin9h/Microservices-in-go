@@ -1,2 +1,3 @@
 /project/db-data/postgres/
 .vscode
+.DS_Store
