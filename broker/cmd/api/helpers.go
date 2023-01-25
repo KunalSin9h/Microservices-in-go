@@ -28,7 +28,7 @@ func (app *Config) readJson(w http.ResponseWriter, r *http.Request, data any) er
 
 	/*
 		struct{} -> empty struct
-		struct{}{} -> instense of empty struct
+		struct{}{} -> instance of empty struct
 		means nothing
 	*/
 	if err := dec.Decode(&struct{}{}); err != nil {
