@@ -1,5 +1,6 @@
 /project/db-data/postgres/
 .vscode
-frontend/frontApp
-broker/brokerApp
-auth/authApp
+# ignore the binaries without extension
+/frontend/frontApp/
+/broker/brokerApp/
+/auth/authApp/
