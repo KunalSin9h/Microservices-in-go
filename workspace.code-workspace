@@ -10,6 +10,9 @@
 			"path": "auth"
 		},
 		{
+			"path": "logger"
+		},
+		{
 			"path": "project"
 		}
 	],
