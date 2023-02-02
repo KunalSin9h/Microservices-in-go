@@ -51,7 +51,7 @@ func main() {
 		Models: data.New(client),
 	}
 
-	go app.serve()
+	app.serve()
 }
 
 func (app *Config) serve() {
@@ -61,7 +61,7 @@ func (app *Config) serve() {
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
-
+	log.Printf("Starting server at port %s\n", PORT)
 	log.Fatal(server.ListenAndServe())
 }
 
