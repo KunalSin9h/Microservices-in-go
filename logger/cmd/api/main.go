@@ -2,9 +2,13 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"time"
+
+	"logger/data"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -14,12 +18,14 @@ const (
 	PORT          = "5003"
 	RPC_PORT      = "5031"
 	GRPC_PORT     = "5032"
-	MONGO_DB_CONN = "mongodb://mongo:27017"
+	MONGO_DB_CONN = "mongodb://localhost:27017"
 )
 
 var client *mongo.Client
 
-type Config struct{}
+type Config struct {
+	Models data.Models
+}
 
 func main() {
 	conn, err := connectToMongo()
@@ -41,6 +47,22 @@ func main() {
 		}
 	}()
 
+	app := Config{
+		Models: data.New(client),
+	}
+
+	go app.serve()
+}
+
+func (app *Config) serve() {
+	server := &http.Server{
+		Addr:         fmt.Sprintf(":%s", PORT),
+		Handler:      app.routes(),
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
+
+	log.Fatal(server.ListenAndServe())
 }
 
 func connectToMongo() (*mongo.Client, error) {
