@@ -18,7 +18,7 @@ func (app *Config) writeLog(c *gin.Context) {
 	var req requestPayload
 
 	if err := c.BindJSON(&req); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 

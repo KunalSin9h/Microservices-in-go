@@ -1,6 +1,7 @@
 FRONT_END_BINARY=frontApp
 BROKER_BINARY=brokerApp
 AUTH_BINARY=authApp
+LOGGER_BINARY=loggerApp
 
 ## up: starts all containers in the background without forcing build
 up:
@@ -9,7 +10,7 @@ up:
 	@echo "Docker images started!"
 
 ## up_build: stops docker-compose (if running), builds all projects and starts docker compose
-up_build: build_broker build_auth
+up_build: build_broker build_auth build_logger
 	@echo "Stopping docker images (if running...)"
 	docker-compose down
 	@echo "Building (when required) and starting docker images..."
@@ -25,18 +26,23 @@ down:
 ## build_broker: builds the broker binary as a linux executable
 build_broker:
 	@echo "Building broker binary..."
-	cd ../broker && env GOOS=linux CGO_ENABLED=0 go build -o ${BROKER_BINARY} ./cmd/api/*.go
+	cd ../broker && GOOS=linux CGO_ENABLED=0 go build -o ${BROKER_BINARY} ./cmd/api/*.go
 	@echo "Done!"
 
 ## build_front: builds the frone end binary
 build_front:
 	@echo "Building front end binary..."
-	cd ../frontend && env CGO_ENABLED=0 go build -o ${FRONT_END_BINARY} ./cmd/web/*.go
+	cd ../frontend && GOOS=linux CGO_ENABLED=0 go build -o ${FRONT_END_BINARY} ./cmd/web/*.go
 	@echo "Done!"
 
 build_auth:
 	@echo "Building auth binary..."
-	cd ../auth && CGO_ENABLED=0 go build -o ${AUTH_BINARY} ./cmd/api/*.go
+	cd ../auth && GOOS=linux CGO_ENABLED=0 go build -o ${AUTH_BINARY} ./cmd/api/*.go
+	@echo "Done!"
+
+build_logger:
+	@echo "Building logger binary..."
+	cd ../logger && GOOS=linux CGO_ENABLED=0 GIN_MODE=release go build -o ${LOGGER_BINARY} ./cmd/api/*.go
 	@echo "Done!"
 
 ## start: starts the front end

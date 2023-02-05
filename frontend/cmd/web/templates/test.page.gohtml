@@ -8,6 +8,7 @@
                 <hr>
                 <a id="brokerBtn" class="btn btn-outline-secondary" href="javascript:void(0);">Test Broker</a>
                 <a id="authBtn" class="btn btn-outline-secondary" href="javascript:void(0);">Test Auth</a>
+                <a id="loggerBtn" class="btn btn-outline-secondary" href="javascript:void(0);">Test Logger</a>
 
                 <div id="output" class="mt-5" style="outline: 1px solid silver; padding: 2em;">
                     <span class="text-muted">Output shows here...</span>
@@ -36,6 +37,7 @@
 
         const brokerBtn = document.getElementById("brokerBtn")
         const authBtn = document.getElementById("authBtn")
+        const loggerBtn = document.getElementById("loggerBtn")
 
         const output = document.getElementById("output")
         const payload = document.getElementById("payload")
@@ -83,7 +85,6 @@
                 })
                 const data = await res.json()
                 const dataString = JSON.stringify(data, undefined, 4)
-                console.log(dataString)
                 payload.textContent = JSON.stringify(requestBody, undefined, 4)
                 received.textContent = dataString
 
@@ -99,7 +100,38 @@
             }
         })
 
+        loggerBtn.addEventListener("click", async function(){
+            try {
+                const payloadBody = {
+                    action: "log",
+                    log: {
+                        name: "First log",
+                        data: "First data"
+                    }
+                }
 
+                const res = await fetch("http://localhost:5001/handle", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payloadBody)
+                })
+
+                const resData = await res.json()
+                payload.textContent = JSON.stringify(payloadBody, undefined, 4)
+
+                if (resData.error) {
+                    output.innerHTML += `<br><strong>Error</strong>: ${resData.message}`
+                    return
+                }
+                output.innerHTML += `<br><strong>Response from </strong>: ${resData.message}`
+                received.textContent = JSON.stringify(resData, undefined, 4)
+            }
+            catch(error){
+                output.innerHTML += `<br><strong>Error From Logger</strong>: ${error}`
+            }
+        })
 
     </script>
 {{end}}

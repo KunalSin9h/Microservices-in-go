@@ -18,7 +18,7 @@ const (
 	PORT          = "5003"
 	RPC_PORT      = "5031"
 	GRPC_PORT     = "5032"
-	MONGO_DB_CONN = "mongodb://localhost:27017"
+	MONGO_DB_CONN = "mongodb://mongo:27017"
 )
 
 var client *mongo.Client

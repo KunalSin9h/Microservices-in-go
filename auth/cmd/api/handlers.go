@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -36,6 +38,13 @@ func (app *Config) Authenticate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	err = app.logAuth("[AUTH]", "Authenticated as "+user.FirstName)
+
+	if err != nil {
+		app.errorJson(w, err)
+		return
+	}
+
 	payload := jsonResponse{
 		Error:   false,
 		Message: fmt.Sprintf("Logged in as %s", user.Email),
@@ -43,4 +52,26 @@ func (app *Config) Authenticate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	app.writeJson(w, http.StatusAccepted, payload)
+}
+
+func (app *Config) logAuth(name, data string) error {
+
+	var logEntry struct {
+		Name string `json:"name"`
+		Data string `json:"data"`
+	}
+
+	logEntry.Name = name
+	logEntry.Data = data
+
+	jsonByte, _ := json.MarshalIndent(logEntry, "", "\t")
+
+	_, err := http.Post("http://logger:5003/log", "application/json", bytes.NewBuffer(jsonByte))
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+
 }

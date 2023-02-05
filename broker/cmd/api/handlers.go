@@ -10,11 +10,17 @@ import (
 type RequestPayload struct {
 	Action string      `json:"action"`
 	Auth   AuthPayload `json:"auth,omitempty"`
+	Log    LogPayload  `json:"log,omitempty"`
 }
 
 type AuthPayload struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
+}
+
+type LogPayload struct {
+	Name string `json:"name"`
+	Data string `json:"data"`
 }
 
 func (app *Config) HandleSubmission(w http.ResponseWriter, r *http.Request) {
@@ -30,6 +36,8 @@ func (app *Config) HandleSubmission(w http.ResponseWriter, r *http.Request) {
 	switch request.Action {
 	case "auth":
 		app.authenticate(w, request.Auth)
+	case "log":
+		app.LogItem(w, request.Log)
 	default:
 		app.errorJson(w, errors.New("unknown action"))
 	}
@@ -48,6 +56,8 @@ func (app *Config) authenticate(w http.ResponseWriter, load AuthPayload) {
 		app.errorJson(w, err)
 		return
 	}
+
+	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}
 	res, err := client.Do(req)
@@ -82,8 +92,32 @@ func (app *Config) authenticate(w http.ResponseWriter, load AuthPayload) {
 
 	var payload jsonResponse
 	payload.Error = false
-	payload.Message = "Authenticated"
+	payload.Message = response.Message
 	payload.Data = response.Data
 
 	app.writeJson(w, http.StatusAccepted, payload)
+}
+
+func (app *Config) LogItem(w http.ResponseWriter, load LogPayload) {
+
+	jsonByte, _ := json.MarshalIndent(load, "", "\t")
+	res, err := http.Post("http://logger:5003/log", "application/json", bytes.NewBuffer(jsonByte))
+
+	if err != nil {
+		app.errorJson(w, err, http.StatusInternalServerError)
+	}
+	defer res.Body.Close()
+
+	switch res.StatusCode {
+	case http.StatusBadRequest:
+		app.errorJson(w, errors.New("bad request"), http.StatusBadRequest)
+	case http.StatusInternalServerError:
+		app.errorJson(w, errors.New("internal server error"), http.StatusInternalServerError)
+	default:
+
+		var resPayload jsonResponse
+		resPayload.Error = false
+		resPayload.Message = "logged"
+		app.writeJson(w, http.StatusOK, resPayload)
+	}
 }

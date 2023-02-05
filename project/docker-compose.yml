@@ -1,5 +1,6 @@
 version: '3'
 services:
+
   broker:
     build:
       context: ./../broker
@@ -23,7 +24,6 @@ services:
       replicas: 1
     environment:
       DSN: "postgres://admin:admin@postgres:5432/users"
-      # DSN: "host=postgres port=5432 user=admin password=admin dbname=usres sslmode=disable timezone=UTC connect_timeout=5"
     depends_on:
       - postgres
 
@@ -40,8 +40,16 @@ services:
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: users
     volumes:
-      # Bind MOUNT
       - ./db-data/postgres/:/var/lib/postgresql/data/
+
+  logger:
+    build:
+      context: ./../logger
+      dockerfile: ./../logger/logger.dockerfile
+    restart: always # like PM2 restarting the app on crash
+    deploy:
+      mode: replicated
+      replicas: 1
 
   mongo:
     image: 'mongo:latest'
