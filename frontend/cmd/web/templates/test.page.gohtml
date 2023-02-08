@@ -9,6 +9,7 @@
                 <a id="brokerBtn" class="btn btn-outline-secondary" href="javascript:void(0);">Test Broker</a>
                 <a id="authBtn" class="btn btn-outline-secondary" href="javascript:void(0);">Test Auth</a>
                 <a id="loggerBtn" class="btn btn-outline-secondary" href="javascript:void(0);">Test Logger</a>
+                <a id="mailBtn" class="btn btn-outline-secondary" href="javascript:void(0);">Test Mail</a>
 
                 <div id="output" class="mt-5" style="outline: 1px solid silver; padding: 2em;">
                     <span class="text-muted">Output shows here...</span>
@@ -38,10 +39,47 @@
         const brokerBtn = document.getElementById("brokerBtn")
         const authBtn = document.getElementById("authBtn")
         const loggerBtn = document.getElementById("loggerBtn")
+        const mailBtn = document.getElementById("mailBtn")
 
         const output = document.getElementById("output")
         const payload = document.getElementById("payload")
         const received = document.getElementById("received")
+
+        mailBtn.addEventListener("click", async () => {
+            try {
+
+                const requestBody = {
+                    action: "mail",
+                    mail: {
+                        from: "kunal@knl.sh",
+                        to: "kunal@hop.io",
+                        subject: "Hello how are you",
+                        message: "I am good"
+                    }
+                }
+
+                const res = await fetch("http:\/\/localhost:5001/handle", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                })
+                const data = await res.json()
+                const dataString = JSON.stringify(data, undefined, 4)
+                payload.textContent = JSON.stringify(requestBody, undefined, 4)
+                received.textContent = dataString
+
+                if (data.error) {
+                    output.innerHTML += `<br><strong>Error</strong>: ${data.message}`
+                } else {
+                    output.innerHTML += `<br><strong>Response From Mail</strong>: ${data.message}`
+                }
+            }
+            catch(error) {
+                output.innerHTML += `<br><strong>Error From Mail</strong>: ${error}`
+            }
+        })
 
         brokerBtn.addEventListener("click", async () => {
             try {
@@ -75,7 +113,6 @@
                         password: "verysecret"
                     }
                 }
-
                 const res = await fetch("http:\/\/localhost:5001/handle", {
                     method: "POST",
                     headers: {
@@ -110,7 +147,7 @@
                     }
                 }
 
-                const res = await fetch("http://localhost:5001/handle", {
+                const res = await fetch("http:\/\/localhost:5001/handle", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"

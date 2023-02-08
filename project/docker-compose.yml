@@ -65,3 +65,31 @@ services:
       MONGO_INITDB_DATABASE: logs
     volumes:
       - ./db-data/mongo/:/data/db/
+
+  mailhog:
+    image: "lytrax/mailhog:latest"
+    ports:
+      - "1025:1025" # Mail Service [SMTP]
+      - "8025:8025" # Web App
+
+  mail:
+    build:
+      context: "./../mail"
+      dockerfile: "./../mail/mail.dockerfile"
+    ports:
+      - "5004:5004"
+    restart: "always"
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      MAIL_DOMAIN: "localhost"
+      MAIL_HOST: mailhog
+      MAIL_PORT: 1025
+      MAIL_USERNAME: ""
+      MAIL_PASSWORD: ""
+      MAIL_ENCRYPTION: "none"
+      MAIL_FROM_NAME: "Kunal Singh"
+      MAIL_FROM_ADDRESS: "kunal@knl.sh"
+    depends_on:
+      - mailhog
