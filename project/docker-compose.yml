@@ -93,3 +93,15 @@ services:
       MAIL_FROM_ADDRESS: "kunal@knl.sh"
     depends_on:
       - mailhog
+
+  rabbitmq:
+    image: "rabbitmq:3.11-management-alpine"
+    ports:
+      - "5672:5672" # AMQP Service
+      - "15672:15672" # Management Webapp
+    deploy:
+      mode: replicated
+      replicas: 1
+    restart: always
+    volumes:
+      - ./db-data/rabbitmq/:/var/lib/rabbitmq/

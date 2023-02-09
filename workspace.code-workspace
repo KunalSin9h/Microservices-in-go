@@ -16,6 +16,9 @@
 			"path": "mail"
 		},
 		{
+			"path": "listener"
+		},
+		{
 			"path": "project"
 		}
 	],
