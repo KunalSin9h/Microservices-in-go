@@ -5,25 +5,29 @@ import (
 	"math"
 	"time"
 
+	"listener/event"
+
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
 func main() {
 	// try  connect to rabbitmq server
-	rabbitConn, err := connectToRabbitMQ()
+	rabbitConn, err := connectToRabbitMQ() // rabbitConn -> *amqp.Connection
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	defer rabbitConn.Close()
-	log.Println(rabbitConn)
 
-	// start listening to messages
+	consumer, err := event.NewConsumer(rabbitConn) // consumer -> event.Consumer
 
-	// create consumers
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	// watch the queue and consume events
+	topics := []string{"log.INFO", "log.WARNING", "log.ERROR"}
+	log.Fatal(consumer.Listen(topics))
 }
 
 func connectToRabbitMQ() (conn *amqp.Connection, err error) {
@@ -32,7 +36,8 @@ func connectToRabbitMQ() (conn *amqp.Connection, err error) {
 	var sleepTime = 1 * time.Second
 
 	for {
-		conn, err = amqp.Dial("amqp://guest:guest@localhost:5672")
+		//                    "-------Connection-String----------"
+		conn, err = amqp.Dial("amqp://guest:guest@rabbitmq:5672")
 		if err != nil {
 			count++
 			log.Printf("Trying to connect with RabbitMQ...(%d attempts more remaining)\n", countLimit-count)
