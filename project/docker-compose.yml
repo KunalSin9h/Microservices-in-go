@@ -94,6 +94,16 @@ services:
     depends_on:
       - mailhog
 
+  listener:
+    build:
+      context: "./../listener"
+      dockerfile: "./../listener/listener.dockerfile"
+    deploy:
+      mode: replicated
+      replicas: 1
+    depends_on:
+      - rabbitmq
+
   rabbitmq:
     image: "rabbitmq:3.11-management-alpine"
     ports:
@@ -102,6 +112,5 @@ services:
     deploy:
       mode: replicated
       replicas: 1
-    restart: always
     volumes:
       - ./db-data/rabbitmq/:/var/lib/rabbitmq/
