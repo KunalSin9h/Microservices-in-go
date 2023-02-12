@@ -5,6 +5,7 @@ import (
 )
 
 func declareExchange(chnl *amqp.Channel) error {
+	//                          ExName        ExType(Fanout, topic...etc)
 	return chnl.ExchangeDeclare("logs_topic", "topic", true, false, false, false, nil)
 }
 

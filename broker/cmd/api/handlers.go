@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+
+	"broker/event"
 )
 
 type RequestPayload struct {
@@ -45,7 +47,8 @@ func (app *Config) HandleSubmission(w http.ResponseWriter, r *http.Request) {
 	case "auth":
 		app.authenticate(w, request.Auth)
 	case "log":
-		app.logItem(w, request.Log)
+		// app.logItem(w, request.Log)
+		app.logItemAMQP(w, request.Log)
 	case "mail":
 		app.sendMail(w, request.Mail)
 	default:
@@ -156,4 +159,39 @@ func (app *Config) sendMail(w http.ResponseWriter, load MailPayload) {
 	payload.Message = "Email send to " + load.To
 
 	app.writeJson(w, http.StatusAccepted, payload)
+}
+
+func (app *Config) logItemAMQP(w http.ResponseWriter, load LogPayload) {
+
+	err := app.pushToQueue(load.Name, load.Data)
+
+	if err != nil {
+		app.errorJson(w, err, http.StatusInternalServerError)
+		return
+	}
+	payload := jsonResponse{
+		Error:   false,
+		Message: "Logged via RabbitMQ",
+	}
+
+	app.writeJson(w, http.StatusAccepted, payload)
+}
+
+func (app *Config) pushToQueue(name, data string) error {
+	p, err := event.NewProducer(app.RabbitMQ)
+	if err != nil {
+		return err
+	}
+
+	payload := LogPayload{
+		Name: name,
+		Data: data,
+	}
+
+	// Don't use Indent in production
+	j, _ := json.MarshalIndent(payload, "", "\t") // j -> []byte
+
+	err = p.Push(string(j), "log.INFO")
+
+	return err
 }

@@ -34,7 +34,7 @@ func NewConsumer(conn *amqp.Connection) (Consumer, error) {
 }
 
 func (c *Consumer) setup() error {
-	chnl, err := c.Conn.Channel()
+	chnl, err := c.Conn.Channel() // Opening a channel in connection
 
 	if err != nil {
 		return nil
@@ -42,7 +42,7 @@ func (c *Consumer) setup() error {
 
 	defer chnl.Close()
 
-	return declareExchange(chnl)
+	return declareExchange(chnl) // Defining and Declaring Exchange in channel
 }
 
 // Listening to queues
@@ -53,14 +53,15 @@ func (c *Consumer) Listen(topics []string) error {
 	}
 	defer chnl.Close()
 
-	queue, err := declareRandomQueue(chnl)
+	queue, err := declareRandomQueue(chnl) // queue -> amqp.Queue
 
 	if err != nil {
 		return nil
 	}
 
 	for _, topic := range topics {
-		err := chnl.QueueBind(queue.Name, topic, "logs_topic", false, nil)
+		err := chnl.QueueBind(queue.Name, topic, "logs_topic", false, nil) // the main binding process
+		// ^^ Binding the Exchange + Queue + Topics
 		if err != nil {
 			return err
 		}
@@ -76,7 +77,7 @@ func (c *Consumer) Listen(topics []string) error {
 	holdExecution := make(chan bool)
 
 	go func() {
-		for d := range message {
+		for d := range message { // d -> amqp.Delivery
 			var payload Payload
 			_ = json.Unmarshal(d.Body, &payload)
 			go handleRequest(payload) // This makes handling each request is separate go routine
