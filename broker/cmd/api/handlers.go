@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"net/rpc"
 
 	"broker/event"
 )
@@ -48,7 +49,8 @@ func (app *Config) HandleSubmission(w http.ResponseWriter, r *http.Request) {
 		app.authenticate(w, request.Auth)
 	case "log":
 		// app.logItem(w, request.Log)
-		app.logItemAMQP(w, request.Log)
+		// app.logItemAMQP(w, request.Log)
+		app.LogItemRPC(w, request.Log)
 	case "mail":
 		app.sendMail(w, request.Mail)
 	default:
@@ -194,4 +196,37 @@ func (app *Config) pushToQueue(name, data string) error {
 	err = p.Push(string(j), "log.INFO")
 
 	return err
+}
+
+type RPCPayload struct {
+	Name, Data string
+}
+
+func (app *Config) LogItemRPC(w http.ResponseWriter, load LogPayload) {
+	client, err := rpc.Dial("tcp", "logger:5031")
+	if err != nil {
+		app.errorJson(w, err)
+		return
+	}
+
+	payload := RPCPayload{
+		Name: load.Name,
+		Data: load.Data,
+	}
+
+	result := new(string)
+
+	err = client.Call("RPCServer.LogInfo", payload, result)
+
+	if err != nil {
+		app.errorJson(w, err)
+		return
+	}
+
+	res := jsonResponse{
+		Error:   false,
+		Message: *result,
+	}
+
+	app.writeJson(w, http.StatusAccepted, res)
 }

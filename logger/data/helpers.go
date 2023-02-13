@@ -7,7 +7,7 @@ import (
 
 const charSet = "abcdefghijklmnopqrstuvwzyxABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
 
-func getRandomSequence(l int) string {
+func GetRandomSequence(l int) string {
 	var res string
 	for i := 0; i < l; i++ {
 		x := big.NewInt(int64(len(charSet)))

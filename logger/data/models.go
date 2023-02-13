@@ -46,7 +46,7 @@ func (l *LogEntry) Insert(entry LogEntry) error {
 	collection := client.Database("logs").Collection("logs")
 
 	_, err := collection.InsertOne(context.TODO(), LogEntry{
-		ID:        getRandomSequence(11),
+		ID:        GetRandomSequence(11),
 		Name:      entry.Name,
 		Data:      entry.Data,
 		CreatedAt: time.Now(),

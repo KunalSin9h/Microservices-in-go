@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"net/http"
+	"net"
+	"net/http" // FOR Hyper Text Transfer Protocol (REST)
+	"net/rpc"  // FOR Remote Procedure Call Protocol
 	"os"
 	"time"
 
@@ -21,7 +23,7 @@ const (
 	MONGO_DB_CONN = "mongodb://mongo:27017"
 )
 
-var client *mongo.Client
+var client *mongo.Client // Package Level Variable
 
 type Config struct {
 	Models data.Models
@@ -51,6 +53,16 @@ func main() {
 		Models: data.New(client),
 	}
 
+	// rpc.Register is a function in the Go standard library net/rpc package that allows you to register an object,
+	// typically a struct, as a remotely accessible service.
+	err = rpc.Register(new(RPCServer))
+	if err != nil {
+		log.Fatal(err)
+	}
+	// Register an object then the client can call any method of that object
+
+	go app.rpcListen()
+
 	app.serve()
 }
 
@@ -63,6 +75,23 @@ func (app *Config) serve() {
 	}
 	log.Printf("Starting server at port %s\n", PORT)
 	log.Fatal(server.ListenAndServe())
+}
+
+func (app *Config) rpcListen() error {
+	log.Println("Starting RPC server on port", RPC_PORT)
+	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", RPC_PORT)) // 1. Listening on network
+	if err != nil {
+		return err
+	}
+	defer listen.Close()
+
+	for {
+		rpcConn, err := listen.Accept() // rpcConn -> net.Conn // 2. accepting connection on tht
+		if err != nil {
+			continue
+		}
+		go rpc.ServeConn(rpcConn) // Starts handling incoming `rpc` request on the connection
+	}
 }
 
 func connectToMongo() (*mongo.Client, error) {
