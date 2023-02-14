@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"net"
 	"net/http" // FOR Hyper Text Transfer Protocol (REST)
 	"net/rpc"  // FOR Remote Procedure Call Protocol
 	"os"
@@ -63,6 +62,8 @@ func main() {
 
 	go app.rpcListen()
 
+	go app.gRPCListen()
+
 	app.serve()
 }
 
@@ -75,23 +76,6 @@ func (app *Config) serve() {
 	}
 	log.Printf("Starting server at port %s\n", PORT)
 	log.Fatal(server.ListenAndServe())
-}
-
-func (app *Config) rpcListen() error {
-	log.Println("Starting RPC server on port", RPC_PORT)
-	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", RPC_PORT)) // 1. Listening on network
-	if err != nil {
-		return err
-	}
-	defer listen.Close()
-
-	for {
-		rpcConn, err := listen.Accept() // rpcConn -> net.Conn // 2. accepting connection on tht
-		if err != nil {
-			continue
-		}
-		go rpc.ServeConn(rpcConn) // Starts handling incoming `rpc` request on the connection
-	}
 }
 
 func connectToMongo() (*mongo.Client, error) {

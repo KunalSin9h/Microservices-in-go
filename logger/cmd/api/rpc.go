@@ -2,8 +2,11 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"logger/data"
+	"net"
+	"net/rpc"
 	"time"
 )
 
@@ -34,4 +37,21 @@ func (r *RPCServer) LogInfo(load RPCPayload, response *string) error {
 
 	*response = "Processed payload via RPC for payload with name " + load.Name
 	return nil
+}
+
+func (app *Config) rpcListen() error {
+	log.Println("Starting RPC server on port", RPC_PORT)
+	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", RPC_PORT)) // 1. Listening on network
+	if err != nil {
+		return err
+	}
+	defer listen.Close()
+
+	for {
+		rpcConn, err := listen.Accept() // rpcConn -> net.Conn // 2. accepting connection on tht
+		if err != nil {
+			continue
+		}
+		go rpc.ServeConn(rpcConn) // Starts handling incoming `rpc` request on the connection
+	}
 }
