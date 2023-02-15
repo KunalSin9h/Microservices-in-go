@@ -24,6 +24,7 @@ type LogServer struct {
 	Models data.Models
 }
 
+// First Parameter should always be of type context.Context
 func (l *LogServer) WriteLog(ctx context.Context, req *logs.LogRequest) (*logs.LogResponse, error) {
 	input := req.GetLogEntry()
 

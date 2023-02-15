@@ -16,10 +16,10 @@ import (
 )
 
 const (
-	PORT          = "5003"
-	RPC_PORT      = "5031"
-	GRPC_PORT     = "5032"
-	MONGO_DB_CONN = "mongodb://mongo:27017"
+	PORT          = "5003"                  // http/JSON
+	RPC_PORT      = "5031"                  // RPC
+	GRPC_PORT     = "5032"                  // gRPC
+	MONGO_DB_CONN = "mongodb://mongo:27017" // Mongodb
 )
 
 var client *mongo.Client // Package Level Variable
