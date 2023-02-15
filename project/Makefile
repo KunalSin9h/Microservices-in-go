@@ -19,6 +19,18 @@ up_build: build_broker build_auth build_logger build_mail build_listener
 	docker-compose up --build -d
 	@echo "Docker images built and started!"
 
+build_and_push_images_with_tag: build_broker build_auth build_logger build_mail build_listener
+	cd ../broker && docker build -f broker.dockerfile -t kunalsin9h/broker-service . && \
+		docker push kunalsin9h/broker-service
+	cd ../auth && docker build -f auth.dockerfile -t kunalsin9h/auth-service . && \
+		docker push kunalsin9h/auth-service
+	cd ../logger && docker build -f logger.dockerfile -t kunalsin9h/logger-service . && \
+		docker push kunalsin9h/logger-service
+	cd ../mail && docker build -f mail.dockerfile -t kunalsin9h/mail-service . && \
+		docker push kunalsin9h/mail-service
+	cd ../listener && docker build -f listener.dockerfile -t kunalsin9h/listener-service . && \
+		docker push kunalsin9h/listener-service
+
 ## down: stop docker compose
 down:
 	@echo "Stopping docker compose..."
