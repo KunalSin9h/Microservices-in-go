@@ -20,7 +20,7 @@ up_build: build_broker build_auth build_logger build_mail build_listener
 	@echo "Docker images built and started!"
 
 build_and_push_images_with_tag: build_broker 
-	cd ../broker && docker build -f broker.dockerfile -t kunalsin9h/broker-service . && \
+	cd ../broker && docker build -f broker.dockerfile -t kunalsin9h/broker-service:1.0.1 . && \
 		docker push kunalsin9h/broker-service:1.0.1
 
 ## down: stop docker compose
