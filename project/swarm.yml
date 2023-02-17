@@ -3,10 +3,14 @@ version: '3'
 
 services:
 
+  frontend:
+    image: kunalsin9h/frontend-services:latest
+    deploy:
+      mode: replicated
+      replicas: 1
+
   broker:
     image: kunalsin9h/broker-service:latest
-    ports:
-      - "5001:5001"
     deploy:
       mode: replicated
       replicas: 1
@@ -19,8 +23,6 @@ services:
 
   auth:
     image: kunalsin9h/auth-service
-    ports:
-      - "5002:5002"
     deploy:
       mode: replicated
       replicas: 1
@@ -35,8 +37,6 @@ services:
 
   mail:
     image:  kunalsin9h/mail-service
-    ports:
-      - "5004:5004"
     deploy:
       mode: replicated
       replicas: 1
@@ -52,23 +52,16 @@ services:
 
   rabbitmq:
     image: "rabbitmq:3.11-alpine"
-    ports:
-      - "5672:5672"
     deploy:
       mode: global # Only ever going to have one instance
 
   mailhog:
     image: "lytrax/mailhog:latest"
-    ports:
-      - "1025:1025"
-      - "8025:8025"
     deploy:
       mode: global
 
   mongo:
     image: 'mongo:latest'
-    ports:
-      - "27017:27017"
     deploy:
       mode: global
     environment:
@@ -80,8 +73,6 @@ services:
 
   postgres:
     image: 'postgres:14.6-alpine3.17'
-    ports:
-      - "5432:5432"
     restart: always
     deploy:
       mode: global
