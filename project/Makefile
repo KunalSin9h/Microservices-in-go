@@ -1,4 +1,4 @@
-FRONT_END_BINARY=frontApp
+FRONT_END_BINARY=frontendApp
 BROKER_BINARY=brokerApp
 AUTH_BINARY=authApp
 LOGGER_BINARY=loggerApp
@@ -12,15 +12,16 @@ up:
 	@echo "Docker images started!"
 
 ## up_build: stops docker-compose (if running), builds all projects and starts docker compose
-up_build: build_broker build_auth build_logger build_mail build_listener
+up_build: build_front build_broker build_auth build_logger build_mail build_listener
 	@echo "Stopping docker images (if running...)"
 	docker-compose down
 	@echo "Building (when required) and starting docker images..."
 	docker-compose up --build -d
 	@echo "Docker images built and started!"
 
-build_and_push_images_with_tag: 
-	@echo "Nothing to do"
+build_and_push_images_with_tag: build_front
+	cd ../frontend && docker build -t kunalsin9h/frontend-service:latest -f frontend.dockerfile . && \
+		docker push kunalsin9h/frontend-service:latest
 
 ## down: stop docker compose
 down:
@@ -28,16 +29,16 @@ down:
 	docker-compose down
 	@echo "Done!"
 
-## build_broker: builds the broker binary as a linux executable
-build_broker:
-	@echo "Building broker binary..."
-	cd ../broker && GOOS=linux CGO_ENABLED=0 go build -o ${BROKER_BINARY} ./cmd/api/*.go
-	@echo "Done!"
-
 ## build_front: builds the frone end binary
 build_front:
 	@echo "Building front end binary..."
 	cd ../frontend && GOOS=linux CGO_ENABLED=0 go build -o ${FRONT_END_BINARY} ./cmd/web/*.go
+	@echo "Done!"
+
+## build_broker: builds the broker binary as a linux executable
+build_broker:
+	@echo "Building broker binary..."
+	cd ../broker && GOOS=linux CGO_ENABLED=0 go build -o ${BROKER_BINARY} ./cmd/api/*.go
 	@echo "Done!"
 
 build_auth:
