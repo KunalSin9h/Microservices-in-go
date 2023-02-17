@@ -21,7 +21,7 @@ up_build: build_front build_broker build_auth build_logger build_mail build_list
 
 build_and_push_images_with_tag: build_front
 	cd ../frontend && docker build -f frontend.dockerfile -t kunalsin9h/frontend-service:latest . && \
-		docker push kunalsin9h/frontend-service:latst
+		docker push kunalsin9h/frontend-service:latest
 
 ## down: stop docker compose
 down:
