@@ -4,7 +4,7 @@ version: '3'
 services:
 
   caddy:
-    image: kunalsin9h/caddy-services:latest
+    image: kunalsin9h/caddy-service:latest
     ports:
       - "80:80"
       - "443:443"
@@ -16,7 +16,7 @@ services:
       - caddy_config:/config
 
   frontend:
-    image: kunalsin9h/frontend-services:latest
+    image: kunalsin9h/frontend-service:latest
     deploy:
       mode: replicated
       replicas: 1
@@ -85,7 +85,6 @@ services:
 
   postgres:
     image: 'postgres:14.6-alpine3.17'
-    restart: always
     deploy:
       mode: global
     environment:
