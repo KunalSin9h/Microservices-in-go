@@ -3,6 +3,18 @@ version: '3'
 
 services:
 
+  caddy:
+    image: kunalsin9h/caddy-services:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    deploy:
+      mode: replicated
+      replicas: 1
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+
   frontend:
     image: kunalsin9h/frontend-services:latest
     deploy:
@@ -83,3 +95,7 @@ services:
     volumes:
       - ./db-data/postgres/:/var/lib/postgresql/data/
 
+volumes:
+  caddy_data:
+    external: true
+  caddy_config:
