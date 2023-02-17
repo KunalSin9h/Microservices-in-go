@@ -20,7 +20,7 @@ up_build: build_front build_broker build_auth build_logger build_mail build_list
 	@echo "Docker images built and started!"
 
 build_and_push_images_with_tag: build_front
-	cd ../frontend && docker build -t kunalsin9h/frontend-service:latest . && \
+	cd ../frontend && docker build -f frontend.dockerfile -t kunalsin9h/frontend-service:latest . && \
 		docker push kunalsin9h/frontend-service:latst
 
 ## down: stop docker compose
