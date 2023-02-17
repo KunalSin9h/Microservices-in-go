@@ -17,6 +17,8 @@ services:
 
   frontend:
     image: kunalsin9h/frontend-service:latest
+    ports:
+      - "5000:5000"
     deploy:
       mode: replicated
       replicas: 1
