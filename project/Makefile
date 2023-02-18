@@ -19,9 +19,8 @@ up_build: build_front build_broker build_auth build_logger build_mail build_list
 	docker-compose up --build -d
 	@echo "Docker images built and started!"
 
-build_and_push_images_with_tag: build_front
-	cd ../frontend && docker build -f frontend.dockerfile -t kunalsin9h/frontend-service:latest . && \
-	docker push kunalsin9h/frontend-service:latest
+build_and_push_images_with_tag:
+	@echo "Nothing to do"
 
 ## down: stop docker compose
 down:
