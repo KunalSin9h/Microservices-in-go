@@ -12,7 +12,7 @@ services:
       mode: replicated
       replicas: 1
     environment:
-      BROKER_URL: "http://broker"
+      BROKER_URL: "http://backend"
 
   broker:
     build:

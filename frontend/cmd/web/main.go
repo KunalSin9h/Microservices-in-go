@@ -47,7 +47,7 @@ func render(w http.ResponseWriter, t string) {
 	data.BrokerURL = os.Getenv("BROKER_URL")
 
 	if notPresentInEnvVariable := ""; data.BrokerURL == notPresentInEnvVariable {
-		data.BrokerURL = "http://broker"
+		data.BrokerURL = "http://backend"
 	}
 
 	if err := tmpl.Execute(w, data); err != nil {
