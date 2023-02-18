@@ -11,6 +11,9 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+      placement: # These have dependency on host machine so they should not replicated on other nodes
+        constraints:
+          - node.hostname == node-001
     volumes:
       - caddy_data:/data
       - caddy_config:/config
@@ -21,7 +24,7 @@ services:
       mode: replicated
       replicas: 1
     environment:
-      BROKER_URL: "http://backend"
+      BROKER_URL: "https://broker.kunalsin9h.dev"
 
   broker:
     image: kunalsin9h/broker-service:latest
@@ -34,7 +37,9 @@ services:
     deploy:
       mode: replicated
       replicas: 1
-
+      placement:
+        constraints:
+          - node.hostname == node-001
   auth:
     image: kunalsin9h/auth-service
     deploy:
@@ -66,18 +71,30 @@ services:
 
   rabbitmq:
     image: "rabbitmq:3.11-alpine"
+    ports:
+      - "5672:5672" # AMQP Service
     deploy:
-      mode: global # Only ever going to have one instance
+      mode: replicated
+      replicas: 1
 
   mailhog:
     image: "lytrax/mailhog:latest"
+    ports:
+      - "1025:1025" # Mail Service [SMTP]
     deploy:
-      mode: global
+      mode: replicated
+      replicas: 1
 
   mongo:
     image: 'mongo:latest'
+    ports:
+      - "27017:27017"
     deploy:
-      mode: global
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == node-001
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin
@@ -87,8 +104,14 @@ services:
 
   postgres:
     image: 'postgres:14.6-alpine3.17'
+    ports:
+      - "5432:5432"
     deploy:
-      mode: global
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == node-001
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
