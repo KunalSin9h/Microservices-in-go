@@ -58,7 +58,7 @@
                     }
                 }
 
-                const res = await fetch("http:\/\/backend/handle", {
+                const res = await fetch({{print .BrokerURL "/handle"}}, {
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/json'
@@ -83,7 +83,7 @@
 
         brokerBtn.addEventListener("click", async () => {
             try {
-                const res = await fetch("http:\/\/backend/", {
+                const res = await fetch({{.BrokerURL}}, {
                     method: "POST"
                 })
                 const data = await res.json()
@@ -113,7 +113,7 @@
                         password: "verysecret"
                     }
                 }
-                const res = await fetch("http:\/\/backend/handle", {
+                const res = await fetch({{print .BrokerURL "/handle"}}, {
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/json'
@@ -147,7 +147,7 @@
                     }
                 }
 
-                const res = await fetch("http:\/\/backend/handle", {
+                const res = await fetch({{print .BrokerURL "/handle"}}, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
