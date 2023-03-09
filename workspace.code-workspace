@@ -1,31 +1,32 @@
 {
-	"folders": [
-		{
-			"path": "frontend"
-		},
-		{
-			"path": "broker"
-		},
-		{
-			"path": "auth"
-		},
-		{
-			"path": "logger"
-		},
-		{
-			"path": "mail"
-		},
-		{
-			"path": "listener"
-		},
-		{
-			"path": "project"
-		}
-	],
-	"settings": {
-		"editor.fontFamily": "'Cascadia Code', 'monospace', monospace",
-		"cSpell.enableFiletypes": [
-			"!dockercompose"
-		]
-	}
+  "folders": [
+    {
+      "path": "frontend"
+    },
+    {
+      "path": "broker"
+    },
+    {
+      "path": "auth"
+    },
+    {
+      "path": "logger"
+    },
+    {
+      "path": "mail"
+    },
+    {
+      "path": "listener"
+    },
+    {
+      "path": "project"
+    }
+  ],
+  "settings": {
+    "editor.fontFamily": "'Cascadia Code', 'monospace', monospace",
+    "cSpell.enableFiletypes": ["!dockercompose"],
+    "yaml.schemas": {
+      "kubernetes://schema/v1%40service": "file:///media/kunal/HardDrive/Microservices-In-Go/project/k8s/rabbitmq.yml"
+    }
+  }
 }
