@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mongo
+  name: mailhog
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mongo
+      app: mailhog
   template:
     metadata:
       labels:
-        app: mongo
+        app: mailhog
     spec:
       containers:
-      - name: mongo
-        image: "mongo:latest"
+      - name: mailhog
+        image: "mailhog:latest"
         env:
           - name: MONGO_INITDB_ROOT_USERNAME
             value: "admin"
@@ -39,10 +39,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mongo
+  name: mailhog
 spec:
   selector:
-    app: mongo
+    app: mailhog
   ports:
     - protocol: TCP
       name: main-port

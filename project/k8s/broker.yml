@@ -1,22 +1,24 @@
-apiVersion: apps/v1
+apiVersion: apps/v1 # Which Kubernetes API Should this k8s Manifest file should use
+# v1 or apps/v1
+#
 kind: Deployment
 metadata:
-  name: rabbitmq
+  name: broker
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: rabbitmq
+      app: broker
   template:
     metadata:
       labels:
-        app: rabbitmq
+        app: broker
     spec:
       containers:
-      - name: rabbit
-        image: "rabbitmq:3.11-alpine"
+      - name: broker
+        image: "kunalsin9h/broker-service:latest"
         ports:
-          - containerPort: 5672
+          - containerPort: 5001
         resources:
           requests:
             memory: "64Mi"
@@ -25,17 +27,18 @@ spec:
             memory: "128Mi"
             cpu: "500m"
 
+
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: rabbitmq
+  name: broker
 spec:
   selector:
-    app: rabbitmq
+    app: broker
   ports:
     - protocol: TCP
       name: main-port
-      port: 5672
-      targetPort: 5672
+      port: 5001
+      targetPort: 5001
