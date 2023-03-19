@@ -1,29 +1,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mailhog
+  name: mail
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mailhog
+      app: mail
   template:
     metadata:
       labels:
-        app: mailhog
+        app: mail
     spec:
       containers:
-      - name: mailhog
-        image: "mailhog:latest"
+      - name: mail
+        image: "kunalsin9h/mail-service"
         env:
-          - name: MONGO_INITDB_ROOT_USERNAME
-            value: "admin"
-          - name: MONGO_INITDB_ROOT_PASSWORD
-            value: "admin"
-          - name: MONGO_INITDB_DATABASE
-            value: "logs"
+          - name: MAIL_DOMAIN
+            value: "localhost"
+          - name: MAIL_HOST
+            value: mailhog
+          - name: MAIL_PORT
+            value: "1025"
+          - name: MAIL_USERNAME
+            value: ""
+          - name: MAIL_PASSWORD
+            value: ""
+          - name: MAIL_ENCRYPTION
+            value: "none"
+          - name: MAIL_FROM_NAME
+            value: "Kunal Singh"
+          - name: MAIL_FROM_ADDRESS
+            value: "kunal@knl.sh"
         ports:
-          - containerPort: 27017
+          - containerPort: 5004
         resources:
           requests:
             memory: "64Mi"
@@ -39,12 +49,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mailhog
+  name: mail
 spec:
   selector:
-    app: mailhog
+    app: mail
   ports:
     - protocol: TCP
       name: main-port
-      port: 27017
-      targetPort: 27017
+      port: 5004
+      targetPort: 5004

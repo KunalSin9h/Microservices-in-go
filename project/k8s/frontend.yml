@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: "kunalsin9h/frontend-service:latest"
+        ports:
+          - containerPort: 5000
+        env:
+          - name: BROKER_URL
+            value: "http://broker.info"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  selector:
+    app: frontend # Deployment > frontend
+  ports:
+    - protocol: TCP
+      name: main-port
+      port: 5000 
+      targetPort: 5000 
