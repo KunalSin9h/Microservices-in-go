@@ -24,7 +24,7 @@ services:
       mode: replicated
       replicas: 1
     environment:
-      BROKER_URL: "https://broker.kunalsin9h.dev"
+      BROKER_URL: "https://broker.kunalsin9h.com"
 
   broker:
     image: kunalsin9h/broker-service:latest

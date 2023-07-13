@@ -1,5 +1,5 @@
 {
-    email   contact@kunalsin9h.dev
+    email   contact@kunalsin9h.com
 }
 
 (static) {
@@ -21,7 +21,7 @@
 	}
 }
 
-swarm.kunalsin9h.dev {
+swarm.kunalsin9h.com {
 	encode zstd gzip
 	import static
 	import security
@@ -29,6 +29,6 @@ swarm.kunalsin9h.dev {
 	reverse_proxy  http://frontend:5000
 }
 
-broker.kunalsin9h.dev {
+broker.kunalsin9h.com {
 	reverse_proxy http://broker:5001
 }
